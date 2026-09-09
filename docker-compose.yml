@@ -1,0 +1,20 @@
+services:
+  mychores:
+    build: .
+    image: mychores:latest
+    container_name: mychores
+    ports:
+      - "5000:5000"
+    environment:
+      DB_PATH: /data/mychores.db
+    volumes:
+      - mychores-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/up')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  mychores-data:

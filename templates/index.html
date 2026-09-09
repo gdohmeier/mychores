@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ app_name }}</title>
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --ink: #243026;
+      --card: #fffdf8;
+      --accent: #2f6f4e;
+      --muted: #6b736c;
+      --line: #e2d9c8;
+      --today: #e8f3ec;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    header {
+      padding: 1.25rem 1.5rem 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    h1 { margin: 0; font-size: 1.8rem; letter-spacing: 0.02em; }
+    .wrap { padding: 0 1.5rem 2rem; max-width: 1200px; margin: 0 auto; }
+    .row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1rem;
+      margin: 0.75rem 0;
+    }
+    input, select, button {
+      font: inherit;
+      padding: 0.45rem 0.6rem;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
+    button, .btn {
+      background: var(--accent);
+      color: white;
+      border: 0;
+      cursor: pointer;
+    }
+    button.ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--line);
+    }
+    button.danger { background: #8b3a2f; }
+    .kids a {
+      text-decoration: none;
+      color: var(--ink);
+      padding: 0.4rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: white;
+    }
+    .kids a.on { background: var(--accent); color: white; border-color: var(--accent); }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.75rem;
+    }
+    .days-pick label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.55rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: white;
+      cursor: pointer;
+    }
+    .chore {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      padding: 0.35rem 0;
+      border-top: 1px dashed var(--line);
+    }
+    .chore.done span { text-decoration: line-through; color: var(--muted); }
+    .time { font-size: 0.8rem; color: var(--muted); }
+    form.inline { display: inline; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>{{ app_name }}</h1>
+    <div class="muted">weekly chore board</div>
+  </header>
+  <div class="wrap">
+    <div class="card">
+      <form method="post" action="/kids" class="row">
+        <input name="name" placeholder="Add a kid" required />
+        <button type="submit">Add kid</button>
+      </form>
+      {% if kids %}
+      <div class="row kids" style="margin-top:0.8rem">
+        {% for kid in kids %}
+          <a class="{{ 'on' if kid.id == selected else '' }}" href="/?kid={{ kid.id }}">{{ kid.name }}</a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    {% if selected %}
+    <div class="card">
+      <form method="post" action="/chores">
+        <input type="hidden" name="kid_id" value="{{ selected }}" />
+        <div class="row">
+          <input name="title" placeholder="Chore" required />
+          <input type="time" name="time" required />
+          <button type="submit">Add chore</button>
+        </div>
+        <div class="row days-pick" style="margin-top:0.7rem">
+          {% for d in days %}
+            <label>
+              <input type="checkbox" name="day" value="{{ loop.index0 }}" />
+              {{ d[:3] }}
+            </label>
+          {% endfor %}
+        </div>
+      </form>
+      <div class="row" style="margin-top:0.7rem">
+        <form method="post" action="/kids/{{ selected }}/reset" class="inline">
+          <button class="ghost" type="submit">Reset this kid's checks</button>
+        </form>
+        <form method="post" action="/kids/{{ selected }}/delete" class="inline" onsubmit="return confirm('Remove this kid and their chores?')">
+          <button class="danger" type="submit">Remove kid</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="grid">
+      {% for i in range(7) %}
+      <section class="card day {{ 'today' if i == today else '' }}">
+        <h3>{{ days[i] }}</h3>
+        {% for chore in chores_by_day[i] %}
+        <div class="chore {{ 'done' if chore.done else '' }}">
+          <form method="post" action="/chores/{{ chore.id }}/toggle" class="inline">
+            <button class="ghost" type="submit">{{ '✓' if chore.done else '○' }}</button>
+          </form>
+          <div>
+            <span>{{ chore.title }}</span>
+            <div class="time">{{ chore.time }}</div>
+          </div>
+          <form method="post" action="/chores/{{ chore.id }}/delete" class="inline" style="margin-left:auto">
+            <button class="ghost" type="submit">×</button>
+          </form>
+        </div>
+        {% else %}
+        <div class="time">No chores</div>
+        {% endfor %}
+      </section>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="card">Add a kid to start the schedule.</div>
+    {% endif %}
+  </div>
+</body>
+</html>
+
