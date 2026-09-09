@@ -5,123 +5,181 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{{ app_name }}</title>
   <style>
-    :root {
-      --bg: #f4f1ea;
-      --ink: #243026;
-      --card: #fffdf8;
-      --accent: #2f6f4e;
-      --muted: #6b736c;
-      --line: #e2d9c8;
-      --today: #e8f3ec;
-    }
     * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
     body {
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      background: var(--bg);
-      color: var(--ink);
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #eef3ee;
+      color: #1f2a24;
+      line-height: 1.45;
     }
     header {
-      padding: 1.25rem 1.5rem 0.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 1rem;
+      background: #234736;
+      color: #fff;
+      padding: 1.1rem 1.4rem;
     }
-    h1 { margin: 0; font-size: 1.8rem; letter-spacing: 0.02em; }
-    .wrap { padding: 0 1.5rem 2rem; max-width: 1200px; margin: 0 auto; }
-    .row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+    header h1 {
+      margin: 0;
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+    header p {
+      margin: 0.2rem 0 0;
+      opacity: 0.85;
+      font-size: 0.95rem;
+    }
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 1rem 1rem 2rem;
+    }
     .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 14px;
+      background: #fff;
+      border: 1px solid #d7e0d8;
+      border-radius: 16px;
       padding: 1rem;
-      margin: 0.75rem 0;
+      margin: 0.9rem 0;
+      box-shadow: 0 8px 20px rgba(35, 71, 54, 0.05);
     }
-    input, select, button {
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: center;
+    }
+    input[type="text"], input[type="time"], input[type="color"], select, button {
       font: inherit;
-      padding: 0.45rem 0.6rem;
-      border-radius: 8px;
-      border: 1px solid var(--line);
+      border-radius: 10px;
+      border: 1px solid #c9d4cb;
+      padding: 0.55rem 0.7rem;
     }
-    button, .btn {
-      background: var(--accent);
-      color: white;
+    input[type="text"] { min-width: 180px; }
+    input[type="color"] {
+      width: 48px;
+      height: 40px;
+      padding: 3px;
+      background: #fff;
+    }
+    button {
+      background: #234736;
+      color: #fff;
       border: 0;
       cursor: pointer;
+      font-weight: 600;
     }
+    button:hover { filter: brightness(1.08); }
     button.ghost {
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--line);
+      background: #fff;
+      color: #355445;
+      border: 1px solid #c9d4cb;
     }
-    button.danger { background: #8b3a2f; }
+    button.danger { background: #8f3b32; }
+    .flash {
+      background: #fff5d8;
+      border: 1px solid #ead7a0;
+      color: #5c4b16;
+      border-radius: 12px;
+      padding: 0.75rem 0.9rem;
+      margin: 0.9rem 0 0;
+    }
     .kids a {
+      display: inline-block;
       text-decoration: none;
-      color: var(--ink);
-      padding: 0.4rem 0.7rem;
+      color: #1f2a24;
+      background: #fff;
+      border: 2px solid #c9d4cb;
       border-radius: 999px;
-      border: 1px solid var(--line);
-      background: white;
+      padding: 0.4rem 0.8rem;
+      font-weight: 650;
     }
-    .kids a.on { background: var(--accent); color: white; border-color: var(--accent); }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 0.75rem;
-    }
+    .kids a.on { color: #fff; }
     .days-pick label {
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
-      padding: 0.35rem 0.55rem;
-      border: 1px solid var(--line);
+      background: #f6f8f6;
+      border: 1px solid #d7e0d8;
       border-radius: 999px;
-      background: white;
+      padding: 0.35rem 0.65rem;
       cursor: pointer;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 0.8rem;
+    }
+    .day {
+      min-height: 180px;
+      margin: 0;
+    }
+    .day h3 {
+      margin: 0 0 0.7rem;
+      font-size: 1rem;
+      color: #234736;
+    }
+    .day.today {
+      outline: 2px solid #234736;
+      outline-offset: -2px;
     }
     .chore {
       display: flex;
       align-items: flex-start;
       gap: 0.5rem;
-      padding: 0.35rem 0;
-      border-top: 1px dashed var(--line);
+      border-top: 1px solid #e6eee7;
+      padding: 0.55rem 0 0.55rem 0.6rem;
+      margin-top: 0.15rem;
     }
-    .chore.done span { text-decoration: line-through; color: var(--muted); }
-    .time { font-size: 0.8rem; color: var(--muted); }
+    .chore.done span { text-decoration: line-through; color: #6d7a71; }
+    .time { font-size: 0.8rem; color: #6d7a71; }
     form.inline { display: inline; }
+    .empty { color: #6d7a71; }
   </style>
 </head>
 <body>
   <header>
     <h1>{{ app_name }}</h1>
-    <div class="muted">weekly chore board</div>
+    <p>Weekly chore board</p>
   </header>
   <div class="wrap">
+    {% with messages = get_flashed_messages() %}
+      {% for message in messages %}
+        <div class="flash">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
     <div class="card">
       <form method="post" action="/kids" class="row">
-        <input name="name" placeholder="Add a kid" required />
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <input type="text" name="name" placeholder="Add a kid" maxlength="40" required />
+        <input type="color" name="color" value="#234736" title="Kid color" />
         <button type="submit">Add kid</button>
       </form>
       {% if kids %}
-      <div class="row kids" style="margin-top:0.8rem">
+      <div class="row kids" style="margin-top:0.85rem">
         {% for kid in kids %}
-          <a class="{{ 'on' if kid.id == selected else '' }}" href="/?kid={{ kid.id }}">{{ kid.name }}</a>
+          <a class="{{ 'on' if kid.id == selected else '' }}"
+             href="/?kid={{ kid.id }}"
+             style="{% if kid.id == selected %}background:{{ kid.color }};border-color:{{ kid.color }};color:#fff;{% else %}border-color:{{ kid.color }};{% endif %}">
+            {{ kid.name }}
+          </a>
         {% endfor %}
       </div>
       {% endif %}
     </div>
 
-    {% if selected %}
+    {% if selected_kid %}
     <div class="card">
       <form method="post" action="/chores">
-        <input type="hidden" name="kid_id" value="{{ selected }}" />
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <input type="hidden" name="kid_id" value="{{ selected_kid.id }}" />
         <div class="row">
-          <input name="title" placeholder="Chore" required />
+          <input type="text" name="title" placeholder="Chore" maxlength="80" required />
           <input type="time" name="time" required />
           <button type="submit">Add chore</button>
         </div>
-        <div class="row days-pick" style="margin-top:0.7rem">
+        <div class="row days-pick" style="margin-top:0.75rem">
+          <button type="button" class="ghost" id="select-all-days">All days</button>
+          <button type="button" class="ghost" id="clear-days">Clear days</button>
           {% for d in days %}
             <label>
               <input type="checkbox" name="day" value="{{ loop.index0 }}" />
@@ -130,11 +188,20 @@
           {% endfor %}
         </div>
       </form>
-      <div class="row" style="margin-top:0.7rem">
-        <form method="post" action="/kids/{{ selected }}/reset" class="inline">
-          <button class="ghost" type="submit">Reset this kid's checks</button>
+      <div class="row" style="margin-top:0.8rem">
+        <form method="post" action="/kids/{{ selected_kid.id }}/color" class="row">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <label>Color
+            <input type="color" name="color" value="{{ selected_kid.color }}" />
+          </label>
+          <button type="submit" class="ghost">Save color</button>
         </form>
-        <form method="post" action="/kids/{{ selected }}/delete" class="inline" onsubmit="return confirm('Remove this kid and their chores?')">
+        <form method="post" action="/kids/{{ selected_kid.id }}/reset" class="inline">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <button class="ghost" type="submit">Reset checks</button>
+        </form>
+        <form method="post" action="/kids/{{ selected_kid.id }}/delete" class="inline" onsubmit="return confirm('Remove this kid and their chores?')">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
           <button class="danger" type="submit">Remove kid</button>
         </form>
       </div>
@@ -145,8 +212,9 @@
       <section class="card day {{ 'today' if i == today else '' }}">
         <h3>{{ days[i] }}</h3>
         {% for chore in chores_by_day[i] %}
-        <div class="chore {{ 'done' if chore.done else '' }}">
+        <div class="chore {{ 'done' if chore.done else '' }}" style="border-left: 5px solid {{ selected_kid.color }};">
           <form method="post" action="/chores/{{ chore.id }}/toggle" class="inline">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
             <button class="ghost" type="submit">{{ '✓' if chore.done else '○' }}</button>
           </form>
           <div>
@@ -154,19 +222,29 @@
             <div class="time">{{ chore.time }}</div>
           </div>
           <form method="post" action="/chores/{{ chore.id }}/delete" class="inline" style="margin-left:auto">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
             <button class="ghost" type="submit">×</button>
           </form>
         </div>
         {% else %}
-        <div class="time">No chores</div>
+        <div class="empty">No chores</div>
         {% endfor %}
       </section>
       {% endfor %}
     </div>
     {% else %}
-    <div class="card">Add a kid to start the schedule.</div>
+    <div class="card empty">Add a kid to start the schedule.</div>
     {% endif %}
   </div>
+  <script>
+    const boxes = () => document.querySelectorAll('input[name="day"]');
+    document.getElementById("select-all-days")?.addEventListener("click", () => {
+      boxes().forEach((box) => { box.checked = true; });
+    });
+    document.getElementById("clear-days")?.addEventListener("click", () => {
+      boxes().forEach((box) => { box.checked = false; });
+    });
+  </script>
 </body>
 </html>
 
